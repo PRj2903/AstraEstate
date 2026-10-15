@@ -1,0 +1,96 @@
+// Prisma Schema for Astrra Estates (SQLite Mode for zero-config development)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         String    @default("ADMIN")
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Property {
+  id              String          @id @default(uuid())
+  refNumber       String          @unique
+  title           String
+  slug            String          @unique
+  tagline         String?
+  description     String
+  listingType     String          // "BUY", "RENT", "COMMERCIAL"
+  propertyType    String          // "VILLA", "PENTHOUSE", "APARTMENT", "TOWNHOUSE", "COMMERCIAL_OFFICE", "COMMERCIAL_RETAIL"
+  status          String          @default("PUBLISHED") // "DRAFT", "PUBLISHED", "ARCHIVED"
+  isFeatured      Boolean         @default(false)
+  price           Float
+  currency        String          @default("USD")
+  pricePrefix     String?         // "Starting at", "Guide Price"
+  priceSuffix     String?         // "/ month", "/ year"
+  bedrooms        Int             @default(0)
+  bathrooms       Float           @default(0)
+  areaSqFt        Float
+  yearBuilt       Int?
+  furnishing      String?         // "Furnished", "Unfurnished", "Designer Turnkey"
+  parkingSpaces   Int?
+  address         String
+  locality        String?
+  city            String
+  state           String?
+  country         String
+  postalCode      String?
+  latitude        Float?
+  longitude       Float?
+  amenities       String          // JSON array string
+  virtualTourUrl  String?
+  videoUrl        String?
+  viewsCount      Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  images          PropertyImage[]
+  enquiries       Enquiry[]
+}
+
+model PropertyImage {
+  id           String   @id @default(uuid())
+  propertyId   String
+  property     Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  url          String
+  altText      String?
+  isPrimary    Boolean  @default(false)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model Enquiry {
+  id               String    @id @default(uuid())
+  refNumber        String    @unique
+  propertyId       String?
+  property         Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  name             String
+  email            String
+  phone            String
+  preferredContact String    @default("EMAIL") // "EMAIL", "PHONE", "WHATSAPP"
+  message          String
+  status           String    @default("NEW")   // "NEW", "CONTACTED", "IN_PROGRESS", "CLOSED", "SPAM"
+  internalNotes    String?
+  source           String?   @default("WEBSITE")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model SiteSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}

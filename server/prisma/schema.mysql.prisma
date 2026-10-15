@@ -1,0 +1,106 @@
+// Prisma Schema for Astrra Estates (MySQL Mode for production deployment)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String    @id @default(uuid()) @db.VarChar(36)
+  email        String    @unique @db.VarChar(191)
+  passwordHash String    @db.VarChar(255)
+  name         String    @db.VarChar(191)
+  role         String    @default("ADMIN") @db.VarChar(50)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("admin_users")
+}
+
+model Property {
+  id              String          @id @default(uuid()) @db.VarChar(36)
+  refNumber       String          @unique @db.VarChar(50)
+  title           String          @db.VarChar(255)
+  slug            String          @unique @db.VarChar(255)
+  tagline         String?         @db.VarChar(255)
+  description     String          @db.Text
+  listingType     String          @db.VarChar(50) // "BUY", "RENT", "COMMERCIAL"
+  propertyType    String          @db.VarChar(50) // "VILLA", "PENTHOUSE", "APARTMENT", "TOWNHOUSE", "COMMERCIAL_OFFICE", "COMMERCIAL_RETAIL"
+  status          String          @default("PUBLISHED") @db.VarChar(50) // "DRAFT", "PUBLISHED", "ARCHIVED"
+  isFeatured      Boolean         @default(false)
+  price           Float
+  currency        String          @default("USD") @db.VarChar(10)
+  pricePrefix     String?         @db.VarChar(50)
+  priceSuffix     String?         @db.VarChar(50)
+  bedrooms        Int             @default(0)
+  bathrooms       Float           @default(0)
+  areaSqFt        Float
+  yearBuilt       Int?
+  furnishing      String?         @db.VarChar(100)
+  parkingSpaces   Int?
+  address         String          @db.VarChar(255)
+  locality        String?         @db.VarChar(191)
+  city            String          @db.VarChar(100)
+  state           String?         @db.VarChar(100)
+  country         String          @db.VarChar(100)
+  postalCode      String?         @db.VarChar(30)
+  latitude        Float?
+  longitude       Float?
+  amenities       String          @db.Text // JSON array string
+  virtualTourUrl  String?         @db.VarChar(500)
+  videoUrl        String?         @db.VarChar(500)
+  viewsCount      Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  images          PropertyImage[]
+  enquiries       Enquiry[]
+
+  @@map("properties")
+}
+
+model PropertyImage {
+  id           String   @id @default(uuid()) @db.VarChar(36)
+  propertyId   String   @db.VarChar(36)
+  property     Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  url          String   @db.VarChar(500)
+  altText      String?  @db.VarChar(255)
+  isPrimary    Boolean  @default(false)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  @@map("property_images")
+}
+
+model Enquiry {
+  id               String    @id @default(uuid()) @db.VarChar(36)
+  refNumber        String    @unique @db.VarChar(50)
+  propertyId       String?   @db.VarChar(36)
+  property         Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  name             String    @db.VarChar(191)
+  email            String    @db.VarChar(191)
+  phone            String    @db.VarChar(50)
+  preferredContact String    @default("EMAIL") @db.VarChar(50)
+  message          String    @db.Text
+  status           String    @default("NEW") @db.VarChar(50) // "NEW", "CONTACTED", "IN_PROGRESS", "CLOSED", "SPAM"
+  internalNotes    String?   @db.Text
+  source           String?   @default("WEBSITE") @db.VarChar(50)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("enquiries")
+}
+
+model SiteSetting {
+  id          String   @id @default(uuid()) @db.VarChar(36)
+  key         String   @unique @db.VarChar(100)
+  value       String   @db.Text
+  description String?  @db.VarChar(255)
+  updatedAt   DateTime @updatedAt
+
+  @@map("site_settings")
+}
