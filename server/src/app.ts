@@ -37,6 +37,20 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Root Endpoint
+app.get('/', (req: Request, res: Response) => {
+  res.json({
+    message: 'Astrra Estates API is online and operational',
+    version: '1.0.0',
+    health: '/api/health',
+    endpoints: {
+      properties: '/api/properties',
+      settings: '/api/settings',
+      health: '/api/health',
+    },
+  });
+});
+
 // Health Check
 app.get('/api/health', (req: Request, res: Response) => {
   res.json({
