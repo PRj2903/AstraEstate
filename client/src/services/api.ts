@@ -36,7 +36,7 @@ async function fetchJson<T>(url: string, options: RequestInit = {}): Promise<T> 
   const token = getStoredToken();
   const headers = new Headers(options.headers || {});
 
-  if (!headers.has('Content-Type') && !(options.body instanceof FormData)) {
+  if (options.body && !headers.has('Content-Type') && !(options.body instanceof FormData)) {
     headers.set('Content-Type', 'application/json');
   }
 

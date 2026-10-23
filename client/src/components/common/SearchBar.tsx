@@ -97,16 +97,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className={`w-full ${compact ? '' : 'max-w-4xl mx-auto'}`}>
       {/* Category Tabs */}
-      <div className="flex items-center space-x-1.5 mb-3 overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center space-x-2 mb-3 overflow-x-auto pb-1 scrollbar-none justify-center sm:justify-start">
         {categories.map((cat) => (
           <button
             key={cat.label}
             type="button"
             onClick={() => setListingType(cat.value)}
-            className={`px-4 py-2 text-xs tracking-wider uppercase font-semibold rounded-lg transition-all whitespace-nowrap shadow-xs ${
+            className={`px-5 py-2 text-xs tracking-wider uppercase font-semibold rounded-xl transition-all whitespace-nowrap shadow-sm ${
               listingType === cat.value
-                ? 'bg-slate-900 text-white'
-                : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-stone-200'
+                ? 'bg-slate-900 text-[#e8d5a7] border border-[#c5a059]/50 shadow-md ring-1 ring-[#c5a059]/30'
+                : 'bg-white/95 backdrop-blur-md text-slate-700 hover:text-slate-950 hover:bg-white border border-stone-200'
             }`}
           >
             {cat.label}
@@ -117,7 +117,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       {/* Main Filter Container */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200 shadow-xl space-y-3"
+        className="bg-white/98 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-stone-200 shadow-2xl space-y-3"
       >
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
           {/* Keyword / Reference */}
@@ -128,7 +128,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Location, neighborhood, or ref (AST-1001)..."
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-slate-900 transition-colors"
+              className="w-full bg-stone-50/80 border border-stone-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-slate-900 transition-colors"
             />
           </div>
 
@@ -138,7 +138,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             <select
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-10 pr-8 py-3 text-sm text-slate-800 focus:outline-none focus:bg-white focus:border-slate-900 transition-colors appearance-none cursor-pointer"
+              className="w-full bg-stone-50/80 border border-stone-200 rounded-xl pl-10 pr-8 py-3 text-sm text-slate-900 focus:outline-none focus:bg-white focus:border-slate-900 transition-colors appearance-none cursor-pointer"
             >
               <option value="">All Destinations</option>
               {availableCities.map((c) => (
@@ -166,9 +166,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
             <button
               type="submit"
-              className="flex-1 py-3 px-5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-sm transition-all"
+              className="flex-1 py-3 px-5 rounded-xl bg-[#c5a059] hover:bg-[#b8934a] text-slate-950 font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition-all hover:scale-[1.01]"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4 h-4 stroke-[2.5]" />
               <span>Search</span>
             </button>
 

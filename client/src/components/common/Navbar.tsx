@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { MessageSquare, Phone, ShieldCheck, Menu, X, ArrowUpRight } from 'lucide-react';
+import { MessageSquare, Phone, Menu, X, ArrowUpRight } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 
 export const Navbar: React.FC = () => {
@@ -85,15 +85,6 @@ export const Navbar: React.FC = () => {
               <MessageSquare className="w-3.5 h-3.5" />
             </a>
 
-            {/* Admin Portal Button */}
-            <Link
-              to="/admin"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium tracking-wider uppercase text-slate-600 hover:text-slate-900 rounded border border-slate-200 hover:bg-slate-50 transition-all"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-slate-500" />
-              Admin
-            </Link>
-
             {/* Explore Button */}
             <Link
               to="/properties"
@@ -106,13 +97,6 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile Menu Toggle Button */}
           <div className="lg:hidden flex items-center space-x-2">
-            <Link
-              to="/admin"
-              className="p-2 text-slate-700 hover:text-slate-900 rounded border border-slate-200"
-              title="Admin Portal"
-            >
-              <ShieldCheck className="w-4 h-4 text-slate-700" />
-            </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-slate-700 hover:text-slate-900 rounded border border-slate-200"
