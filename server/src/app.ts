@@ -20,6 +20,9 @@ import adminSettingsRoutes from './routes/admin/settings.routes';
 
 const app = express();
 
+// Trust proxy header when running behind reverse proxies (Render, Vercel, Cloudflare)
+app.set('trust proxy', 1);
+
 // Security and utility middleware
 app.use(
   helmet({
@@ -29,7 +32,25 @@ app.use(
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (curl, server-to-server, postman)
+      if (!origin) return callback(null, true);
+
+      const clientUrl = process.env.CLIENT_URL;
+      const isAllowed =
+        origin.startsWith('http://localhost:') ||
+        origin.startsWith('http://127.0.0.1:') ||
+        origin.endsWith('.vercel.app') ||
+        origin.endsWith('.onrender.com') ||
+        (clientUrl && (origin === clientUrl || origin === clientUrl.replace(/\/$/, '')));
+
+      if (isAllowed) {
+        return callback(null, true);
+      }
+
+      // Permissive fallback to allow all frontend domains during demonstration
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
